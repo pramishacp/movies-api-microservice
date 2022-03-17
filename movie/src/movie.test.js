@@ -35,7 +35,7 @@ describe("/api/movies", () => {
     });
 
 
-    it('should return 401 if client is not logged in', async () => {
+    it('should return 401 if no token provided', async () => {
       token = ''; 
 
       const res = await exec();
