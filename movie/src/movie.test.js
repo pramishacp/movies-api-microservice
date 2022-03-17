@@ -50,6 +50,33 @@ describe("/api/movies", () => {
       expect(res.status).toBe(400);
     });
 
+    it('should return 200 if a premium user try to create more than 5 books per calendar month', async () => {
+      username = 'premium-jim';
+      password = 'GBLtTyq3E_UNjFnpo9m6';
+
+      const auth =  await authService.getAuthToken({username: username, password: password})
+      token = auth.token;
+
+      await exec();
+      await exec();
+      await exec(); 
+      await exec();
+      await exec();
+
+      const res = await exec();
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("_id");
+      expect(res.body).toHaveProperty("userId");
+      expect(res.body).toHaveProperty("title");
+      expect(res.body.title).toMatch(/(Harry Potter)/i);
+      expect(res.body).toHaveProperty("genre");
+      expect(res.body).toHaveProperty("released");
+      expect(res.body).toHaveProperty("director");
+
+      const { length } = await Movie.find({});
+      expect(length).toBe(6);
+    });
+
     it('should return 403 if a basic user try to create more than 5 books per calendar month', async () => {
       await exec();
       await exec();
@@ -58,8 +85,10 @@ describe("/api/movies", () => {
       await exec();
 
       const res = await exec();
-
       expect(res.status).toBe(403);
+
+      const { length } = await Movie.find({});
+      expect(length).toBe(5);
     });
 
     it("should return 200 if it is valid", async () => {
