@@ -1,12 +1,11 @@
 version: "3.2"
 services:
   app:
-    command: node ./auth/src/server.js
     build:
       context: ./auth
       dockerfile: Dockerfile
-    ports:
-      - published: ${APP_PORT:-3000}
+    ports: 
+      - published: 3000
         target: 3000
     volumes:
       - ./auth:/app/
@@ -42,6 +41,8 @@ services:
       - DB_PASSWORD=$MONGODB_PASSWORD
       - DB_NAME=$MONGODB_DATABASE
       - DB_PORT=$MONGODB_DOCKER_PORT
+      - OMDB_API_URL=$OMDB_API_URL
+      - OMDB_API_KEY=$OMDB_API_KEY
     volumes:
       - ./movie:/app/
     stdin_open: true

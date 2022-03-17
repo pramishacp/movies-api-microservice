@@ -12,7 +12,7 @@ module.exports = () => {
   const url = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=admin`;
 
   mongoose
-    .connect(url, options)
+    .connect('mongodb://localhost:27017/myapp', options)
     .then(() => console.log(`Connected to... ${url}`))
     .catch((err) => console.log(err));
 };
