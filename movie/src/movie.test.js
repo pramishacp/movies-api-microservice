@@ -39,6 +39,9 @@ describe("/api/movies", () => {
 
       const { length } = await Movie.find({});
       expect(length).toBe(1);
+
+      const movie = await Movie.find({ "title": { "$regex": "Harry Potter", "$options": "i" } });
+      expect(movie).not.toBeNull();
     });
   });
 });
