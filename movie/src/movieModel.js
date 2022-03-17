@@ -2,33 +2,25 @@ const Joi = require("joi");
 const mongoose = require("mongoose");
 
 const movieSchema =  new mongoose.Schema({
+  userId: {
+    type: Number,
+    required: true,
+  },
   title: {
     type: String,
     required: true,
-    trim: true,
-    minlength: 3,
-    maxlength: 50,
   },
   genre: {
     type: String,
-    required: true,
-    trim: true,
-    minlength: 3,
-    maxlength: 50,
+    required: true
   },
   released: {
     type: String,
     required: true,
-    trim: true,
-    minlength: 3,
-    maxlength: 50,
   },
   director: {
     type: String,
-    required: true,
-    trim: true,
-    minlength: 3,
-    maxlength: 50,
+    required: true
   },
 });
 
