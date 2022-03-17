@@ -26,6 +26,14 @@ describe("/api/movies", () => {
       await Movie.remove({});
     });
 
+    it('should return 200 if title is not a string', async () => {
+      title = 1
+
+      const res = await exec();
+
+      expect(res.status).toBe(200);
+    });
+
     it("should return 200 if it is valid", async () => {
       const res = await exec();
 
