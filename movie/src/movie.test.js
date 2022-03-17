@@ -34,7 +34,7 @@ describe("/api/movies", () => {
       await Movie.remove({});
     });
 
-    it('should return 401 if user is not authorized', async () => {
+    it('should return 401 if no token provided', async () => {
       token = ''; 
 
       const res = await exec();
@@ -48,6 +48,18 @@ describe("/api/movies", () => {
       const res = await exec();
 
       expect(res.status).toBe(400);
+    });
+
+    it('should return 403 if a basic user try to create more than 5 books per calendar month', async () => {
+      await exec();
+      await exec();
+      await exec(); 
+      await exec();
+      await exec();
+
+      const res = await exec();
+
+      expect(res.status).toBe(403);
     });
 
     it("should return 200 if it is valid", async () => {

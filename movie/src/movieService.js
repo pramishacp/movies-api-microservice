@@ -15,14 +15,31 @@ const movieService = {
             Genre,
             Director
         } = body;
+
+        const {
+            userId
+        } = user;
+
         const movie = new Movie({
             title: Title,
             released: Released,
             genre: Genre,
             director: Director,
-            userId: user.userId
+            userId: userId
         })
         return MovieDAL.insertMovie(movie);
+    },
+    
+    /**
+       * Find all movies of the user
+       * @param {Object} user - user information
+    */
+    findAllMoviesByUserId: (user) => {
+        const {
+            userId
+        } = user;
+
+        return MovieDAL.findAllMoviesByUserId(userId);
     },
 };
 
