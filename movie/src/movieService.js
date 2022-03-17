@@ -29,17 +29,29 @@ const movieService = {
         })
         return MovieDAL.insertMovie(movie);
     },
-    
+
     /**
        * Find all movies of the user
        * @param {Object} user - user information
     */
-    findAllMoviesByUserId: (user) => {
+    findAllByUserId: (user) => {
         const {
             userId
         } = user;
 
-        return MovieDAL.findAllMoviesByUserId(userId);
+        return MovieDAL.findAllByUserId(userId);
+    },
+    
+    /**
+       * Find all movies of user by calender month
+       * @param {Object} user - user information
+    */
+     findAllByUserIdByMonth: (user) => {
+        const {
+            userId
+        } = user;
+
+        return MovieDAL.findAllByUserIdByMonth(userId);
     },
 };
 

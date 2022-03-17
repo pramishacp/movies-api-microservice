@@ -10,10 +10,12 @@ const omdbService = require("./omdb/omdbService");
 
 const auth = require("../middleware/auth");
 
-router.get("/", async (req, res) => {
-    const movies = await Movie.find().select("-__v").sort("name");
+router.get("/", auth, async (req, res) => {
+  const movies = await movieService.findAllByUserId(req.user);
 
-    res.send(movies);
+  console.log(movies)
+
+  return res.status(200).send(movies);
 });
 
 router.post("/", auth, async (req, res) => {
@@ -24,7 +26,7 @@ router.post("/", auth, async (req, res) => {
     if (omdb.Response === "False") { return res.status(400).send("Movie not found.") };
 
     if (req.user.role === "basic") {
-        const { length } = await movieService.findAllMoviesByUserId(req.user);
+        const { length } = await movieService.findAllByUserIdByMonth(req.user);
         if (length === 5) return res.status(403).send("You have already created the 5 movies this month.");
     }
 

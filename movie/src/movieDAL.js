@@ -19,10 +19,24 @@ const movieDal = {
       }),
 
   /**
-   * Find all movies of user by calendar month
-   * @param {Object} movie - movie information
+   * Find all movies of user
+   * @param {String} userId - user's userId
    */
-  findAllMoviesByUserId: (userId) =>
+   findAllByUserId: (userId) =>
+      new Promise(async (resolve, reject) => {
+          try {
+              const resp = await Movie.find({userId: userId});
+              return resolve(resp);
+          } catch (err) {
+              return reject(err);
+          }
+      }),
+
+  /**
+   * Find all movies of user by calender month
+   * @param {String} userId - user's userId
+   */
+   findAllByUserIdByMonth: (userId) =>
       new Promise(async (resolve, reject) => {
           try {
               const resp = await Movie.find({

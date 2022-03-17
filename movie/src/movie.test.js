@@ -13,6 +13,55 @@ describe("/api/movies", () => {
     server.close();
   });
 
+  describe('GET /', () => {
+    let movie;
+    let title;
+    let token; 
+    let username;
+    let password;
+
+    const exec = async () => await request(server).get("/api/movies").set('x-auth-token', token);
+
+    beforeEach(async () => {
+      username = 'basic-thomas';
+      password = 'sR-_pcoow-27-6PAwCD8';
+
+      const auth =   await authService.getAuthToken({username: username, password: password})
+      token = auth.token;
+    });
+
+    afterEach(async () => {
+      await Movie.remove({});
+    });
+
+
+    it('should return 401 if client is not logged in', async () => {
+      token = ''; 
+
+      const res = await exec();
+
+      expect(res.status).toBe(401);
+    });
+
+    it('should return 200 if user is authorized', async () => {
+      const movies = [
+        { title: 'movie1', userId: 123 },
+        { title: 'movie2', userId: 123 },
+      ];
+      
+      await Movie.collection.insertMany(movies);
+
+      const res = await exec();
+
+      console.log(res.body)
+      
+      expect(res.status).toBe(200);
+      expect(res.body.length).toBe(2);
+      expect(res.body.some(g => g.title === 'movie1')).toBeTruthy();
+      expect(res.body.some(g => g.title === 'movie2')).toBeTruthy();
+    });
+  });
+
   describe("POST /", () => {
     let title;
     let token; 
