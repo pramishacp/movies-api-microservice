@@ -7,7 +7,7 @@
     "lint-check": "eslint src/**/*.js",
     "lint-fix": "npx eslint --fix .",
     "start": "nodemon src/server.js",
-    "test": "jest --watchAll --verbose --detectOpenHandles --forceExit"
+    "test": "jest --verbose --forceExit --maxWorkers=1"
   },
   "keywords": [],
   "author": "",

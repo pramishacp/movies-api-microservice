@@ -9,10 +9,8 @@ const baseURL = process.env.AUTH_URL;
 let server;
 
 describe('auth middleware', () => {
-    beforeEach(() => {
-        /* eslint-disable global-require */
-        server = require('../server');
-    });
+    /* eslint-disable global-require */
+    beforeEach(() => { server = require('../server'); });
     afterEach(async () => {
         await server.close();
     });
