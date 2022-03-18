@@ -24,6 +24,22 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      
+      - name: create env file
+        run: |
+         touch .env
+         echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
+         echo APP_PORT=${{ secrets.APP_PORT }} >> .env
+         echo OMDB_API_URL=${{ secrets.OMDB_API_URL }} >> .env
+         echo OMDB_API_KEY=${{ secrets.OMDB_API_KEY }} >> .env
+         echo MONGODB_USER=${{ secrets.MONGODB_USER }} >> .env
+         echo MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }} >> .env
+         echo MONGODB_DATABASE=${{ secrets.MONGODB_DATABASE }} >> .env
+         echo MONGODB_DATABASE_TEST=${{ secrets.MONGODB_DATABASE_TEST }} >> .env
+         echo MONGODB_LOCAL_PORT=${{ secrets.MONGODB_LOCAL_PORT }} >> .env
+         echo MONGODB_DOCKER_PORT=${{ secrets.MONGODB_DOCKER_PORT }} >> .env
+         echo NODE_LOCAL_PORT=${{ secrets.NODE_LOCAL_PORT }} >> .env
+         echo NODE_DOCKER_PORT=${{ secrets.NODE_DOCKER_PORT }} >> .env
 
       # Runs a single command using the runners shell
       - name: Build the stack
