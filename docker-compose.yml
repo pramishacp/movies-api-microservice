@@ -1,16 +1,20 @@
 version: "3.2"
 services:
   app:
+    command: node src/server.js
     build:
       context: ./auth
       dockerfile: Dockerfile
     ports: 
-      - published: 3000
-        target: 3000
+      - published: $APP_PORT
+        target: $APP_PORT
     volumes:
       - ./auth:/app/
     environment:
       JWT_SECRET: ${JWT_SECRET}
+      APP_PORT: $APP_PORT
+    networks:
+      - app-network
 
   mongodb:
     image: mongo:5.0.2
@@ -20,14 +24,16 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
       - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
     ports:
-      - $MONGODB_DOCKER_PORT:$MONGODB_LOCAL_PORT
+      - $MONGODB_LOCAL_PORT:$MONGODB_DOCKER_PORT
     volumes:
       - db:/data/db
+    networks:
+      - app-network
 
   movie:
     depends_on:
       - mongodb
-    command: node ./server.js
+    command: node src/server.js
     build:
       context: ./movie
       dockerfile: Dockerfile
@@ -43,10 +49,18 @@ services:
       - DB_PORT=$MONGODB_DOCKER_PORT
       - OMDB_API_URL=$OMDB_API_URL
       - OMDB_API_KEY=$OMDB_API_KEY
+      - AUTH_URL=http://localhost:${APP_PORT}
+      - JWT_SECRET=$JWT_SECRET
     volumes:
       - ./movie:/app/
     stdin_open: true
     tty: true
+    networks:
+      - app-network
 
 volumes:
   db:
+
+networks:
+  app-network:
+    driver: bridge

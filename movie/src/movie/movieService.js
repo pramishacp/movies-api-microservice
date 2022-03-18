@@ -1,14 +1,13 @@
 const MovieDAL = require("./movieDAL");
 const { Movie } = require('./movieModel');
 
-const mongoose = require('mongoose')
-
 const movieService = {
     /**
-       * Create movie
-       * @param {Object} body - movie information
-    */
-     insertMovie: (body, user) => {
+     * Create movie
+     * @param {Object} body - movie information
+     * @param {Object} user - user information
+     */
+    insertMovie: (body, user) => {
         const {
             Title,
             Released,
@@ -31,9 +30,9 @@ const movieService = {
     },
 
     /**
-       * Find all movies of the user
-       * @param {Object} user - user information
-    */
+     * Find all movies of the user
+     * @param {Object} user - user information
+     */
     findAllByUserId: (user) => {
         const {
             userId
@@ -41,12 +40,12 @@ const movieService = {
 
         return MovieDAL.findAllByUserId(userId);
     },
-    
+
     /**
-       * Find all movies of user by calender month
-       * @param {Object} user - user information
-    */
-     findAllByUserIdByMonth: (user) => {
+     * Find all movies of user by calender month
+     * @param {Object} user - user information
+     */
+    findAllByUserIdByMonth: (user) => {
         const {
             userId
         } = user;
@@ -56,5 +55,3 @@ const movieService = {
 };
 
 module.exports = movieService;
-
-

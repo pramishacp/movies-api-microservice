@@ -2,7 +2,7 @@ const OmdbDAL = require("./omdbDAL");
 
 const omdbService = {
     /**
-     * Find Movie By Title
+     * Find movie by title
      * @param {String} title - movie title
      */
     findMovieByTitle: (title) => OmdbDAL.findMovieByTitle(title),

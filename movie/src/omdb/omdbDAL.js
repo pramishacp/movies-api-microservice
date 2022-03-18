@@ -1,6 +1,5 @@
 require("dotenv").config();
-
-const http = require("../httpService.js");
+const axios = require("axios");
 
 const baseURL = process.env.OMDB_API_URL;
 const apiKey = process.env.OMDB_API_KEY;
@@ -13,7 +12,7 @@ const omdbDAL = {
     findMovieByTitle: (title) =>
         new Promise(async (resolve, reject) => {
             try {
-                const resp = await http.get(`${baseURL}`, {
+                const resp = await axios.get(`${baseURL}`, {
                     params: {
                         t: title,
                         apikey: apiKey,

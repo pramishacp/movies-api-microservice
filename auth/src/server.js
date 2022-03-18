@@ -1,8 +1,11 @@
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
+const swaggerUi = require("swagger-ui-express");
 const { authFactory, AuthError } = require("./auth");
+const { swaggerDocument } = require('./swaggerDocument');
 
-const PORT = 3000;
+const PORT = process.env.APP_PORT || 3000;
 const { JWT_SECRET } = process.env;
 
 if (!JWT_SECRET) {
@@ -37,6 +40,8 @@ app.post("/auth", (req, res, next) => {
     next(error);
   }
 });
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((error, _, res, __) => {
   console.error(
