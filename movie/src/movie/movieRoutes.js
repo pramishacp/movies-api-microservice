@@ -21,7 +21,7 @@ router.post('/', auth, async (req, res) => {
 
     const omdb = await omdbService.findMovieByTitle(req.body.title);
     if (omdb.Response === 'False') {
-        return res.status(400).send('Movie not found..');
+        return res.status(400).send('Movie not found.');
     }
 
     if (req.user.role === 'basic') {

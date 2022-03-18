@@ -9,7 +9,7 @@ services:
       - published: $APP_PORT
         target: $APP_PORT
     volumes:
-      - ./auth:/app/
+      - ./auth/src:/app/src
     environment:
       JWT_SECRET: ${JWT_SECRET}
       APP_PORT: $APP_PORT
@@ -34,7 +34,6 @@ services:
     depends_on:
       - mongodb
       - app
-    command: node src/server.js
     build:
       context: ./movie
       dockerfile: Dockerfile
@@ -54,7 +53,7 @@ services:
       - AUTH_URL=http://app:$APP_PORT
       - JWT_SECRET=$JWT_SECRET
     volumes:
-      - ./movie:/app/
+      - ./movie/src:/app/src
     stdin_open: true
     tty: true
     networks:
