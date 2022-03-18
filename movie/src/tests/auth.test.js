@@ -16,10 +16,11 @@ describe('auth middleware', () => {
     });
 
     let token;
+    let tokenType;
 
     const exec = () => request(server)
         .get('/api/movies')
-        .set('x-auth-token', token);
+        .set('Authorization', `${tokenType} ${token}`);
 
     beforeEach(async () => {
         const { username } = User.basicUser;
@@ -28,11 +29,13 @@ describe('auth middleware', () => {
             username,
             password,
         });
+        tokenType = 'Bearer';
         token = auth.data.token;
     });
 
     it('should return 401 if no token is provided', async () => {
         token = '';
+        tokenType = '';
 
         const res = await exec();
 

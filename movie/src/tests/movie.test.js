@@ -23,7 +23,7 @@ describe('/api/movies', () => {
         let token;
 
         /* eslint-disable no-return-await */
-        const exec = async () => await request(server).get('/api/movies').set('x-auth-token', token);
+        const exec = async () => await request(server).get('/api/movies').set('Authorization', `Bearer ${token}`);
 
         beforeEach(async () => {
             const {
@@ -44,13 +44,13 @@ describe('/api/movies', () => {
 
         it('should return 200 if user is authenticated', async () => {
             const movies = [{
-                title: 'movie1',
-                userId: 123,
-            },
-            {
-                title: 'movie2',
-                userId: 123,
-            },
+                    title: 'movie1',
+                    userId: 123,
+                },
+                {
+                    title: 'movie2',
+                    userId: 123,
+                },
             ];
 
             await Movie.collection.insertMany(movies);
@@ -67,12 +67,13 @@ describe('/api/movies', () => {
     describe('POST /', () => {
         let title;
         let token;
+        let tokenType;
         let username;
         let password;
 
         const exec = async () => await request(server)
             .post('/api/movies')
-            .set('x-auth-token', token)
+            .set('Authorization', `${tokenType} ${token}`)
             .send({
                 title,
             });
@@ -86,6 +87,7 @@ describe('/api/movies', () => {
                 username,
                 password,
             });
+            tokenType = 'Bearer';
             token = auth.data.token;
         });
 
@@ -95,6 +97,7 @@ describe('/api/movies', () => {
 
         it('should return 401 if no token is provided', async () => {
             token = '';
+            tokenType = '';
 
             const res = await exec();
 
@@ -150,7 +153,9 @@ describe('/api/movies', () => {
             expect(res.body).toHaveProperty('released');
             expect(res.body).toHaveProperty('director');
 
-            const { length } = await Movie.find({});
+            const {
+                length
+            } = await Movie.find({});
             expect(length).toBe(6);
         });
 
@@ -164,7 +169,9 @@ describe('/api/movies', () => {
             const res = await exec();
             expect(res.status).toBe(403);
 
-            const { length } = await Movie.find({});
+            const {
+                length
+            } = await Movie.find({});
             expect(length).toBe(5);
         });
 
@@ -180,7 +187,9 @@ describe('/api/movies', () => {
             expect(res.body).toHaveProperty('released');
             expect(res.body).toHaveProperty('director');
 
-            const { length } = await Movie.find({});
+            const {
+                length
+            } = await Movie.find({});
             expect(length).toBe(1);
 
             const movie = await Movie.find({

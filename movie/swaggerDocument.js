@@ -27,8 +27,9 @@ const swaggerDocument = {
                 produces: ['application/json'],
                 parameters: [
                     {
-                        name: 'x-auth-token',
+                        name: 'Authorization',
                         in: 'header',
+                        description: 'Bearer token',
                         required: true,
                         type: 'string',
                     },
@@ -71,8 +72,9 @@ const swaggerDocument = {
                 produces: ['application/json'],
                 parameters: [
                     {
-                        name: 'x-auth-token',
+                        name: 'Authorization',
                         in: 'header',
+                        description: 'Bearer token',
                         required: true,
                         type: 'string',
                     },
