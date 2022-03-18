@@ -1,4 +1,4 @@
-const OmdbDAL = require("./omdbDAL");
+const OmdbDAL = require('./omdbDAL');
 
 const omdbService = {
     /**

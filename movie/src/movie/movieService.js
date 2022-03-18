@@ -1,4 +1,4 @@
-const MovieDAL = require("./movieDAL");
+const MovieDAL = require('./movieDAL');
 const { Movie } = require('./movieModel');
 
 const movieService = {
@@ -12,11 +12,11 @@ const movieService = {
             Title,
             Released,
             Genre,
-            Director
+            Director,
         } = body;
 
         const {
-            userId
+            userId,
         } = user;
 
         const movie = new Movie({
@@ -24,8 +24,8 @@ const movieService = {
             released: Released,
             genre: Genre,
             director: Director,
-            userId: userId
-        })
+            userId,
+        });
         return MovieDAL.insertMovie(movie);
     },
 
@@ -35,7 +35,7 @@ const movieService = {
      */
     findAllByUserId: (user) => {
         const {
-            userId
+            userId,
         } = user;
 
         return MovieDAL.findAllByUserId(userId);
@@ -47,7 +47,7 @@ const movieService = {
      */
     findAllByUserIdByMonth: (user) => {
         const {
-            userId
+            userId,
         } = user;
 
         return MovieDAL.findAllByUserIdByMonth(userId);

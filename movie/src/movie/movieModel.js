@@ -1,5 +1,5 @@
-const Joi = require("joi");
-const mongoose = require("mongoose");
+const Joi = require('joi');
+const mongoose = require('mongoose');
 
 const movieSchema = new mongoose.Schema({
     userId: {
@@ -12,7 +12,7 @@ const movieSchema = new mongoose.Schema({
     },
     genre: {
         type: String,
-        required: true
+        required: true,
     },
     released: {
         type: String,
@@ -20,10 +20,10 @@ const movieSchema = new mongoose.Schema({
     },
     director: {
         type: String,
-        required: true
+        required: true,
     },
 }, {
-    timestamps: true
+    timestamps: true,
 });
 
 const validateMovie = (movie) => {
@@ -32,7 +32,8 @@ const validateMovie = (movie) => {
     });
 
     return schema.validate(movie);
-}
+};
 
+// eslint-disable-next-line new-cap
 module.exports.Movie = new mongoose.model('Movie', movieSchema);
 module.exports.validate = validateMovie;

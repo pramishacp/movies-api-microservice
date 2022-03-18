@@ -1,7 +1,7 @@
-require("dotenv").config();
+require('dotenv').config();
 
 const request = require('supertest');
-const axios = require('axios')
+const axios = require('axios');
 
 const User = require('./test_helper');
 
@@ -10,26 +10,25 @@ let server;
 
 describe('auth middleware', () => {
     beforeEach(() => {
+        /* eslint-disable global-require */
         server = require('../server');
-    })
+    });
     afterEach(async () => {
         await server.close();
     });
 
     let token;
 
-    const exec = () => {
-        return request(server)
-            .get('/api/movies')
-            .set('x-auth-token', token)
-    }
+    const exec = () => request(server)
+        .get('/api/movies')
+        .set('x-auth-token', token);
 
     beforeEach(async () => {
-        const username = User.basicUser.username;
-        const password = User.basicUser.password;
+        const { username } = User.basicUser;
+        const { password } = User.basicUser;
         const auth = await axios.post(`${baseURL}/auth`, {
             username,
-            password
+            password,
         });
         token = auth.data.token;
     });

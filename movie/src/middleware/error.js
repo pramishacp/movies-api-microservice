@@ -1,5 +1,7 @@
+/* eslint-disable no-unused-vars */
 module.exports = (err, req, res, next) => {
-  console.log(err.message, err);
+    /* eslint-disable no-console */
+    console.log(err.message, err);
 
-  res.status(500).send("Something failed.");
+    res.status(500).send('Something failed.');
 };
