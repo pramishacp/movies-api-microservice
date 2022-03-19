@@ -261,4 +261,8 @@ Response
 ```
 
 ## CI/CD Pipeline
-TODO: 
+
+To check CI/CD working
+
+- Click Pull requests Tab - https://github.com/pramishacp/movies-api-microservice/pulls
+- Click GitHub Actions Tab - https://github.com/pramishacp/movies-api-microservice/actions
