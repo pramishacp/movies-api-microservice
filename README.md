@@ -8,11 +8,14 @@
 - [Quick Start](#quick-start)
 - [Testing](#testing)
 - [API](#requirements)
-- [Screenshots](#screenshots)
+- [CI/CD Pipeline](#cicd-pipeline)
 
 ## Introduction
 ### 1) Movie Service 
 We'd like you to build a simple Movie API. It should provide two endpoints:
+
+:speaking_head: Movie service code is located under `./movie` directory
+
 1. `POST /movies`
    1. Allows creating a movie object based on movie title passed in the request body
    2. Based on the title additional movie details should be fetched from
@@ -27,7 +30,8 @@ We'd like you to build a simple Movie API. It should provide two endpoints:
    3. Only authorized users can create a movie.
    4. `Basic` users are restricted to create 5 movies per month (calendar
       month). `Premium` users have no limits.
-1. `GET /movies`
+      
+2. `GET /movies`
    1. Should fetch a list of all movies created by an authorized user.
 
 ⚠️ Don't forget to verify user's authorization token before processing the
@@ -36,12 +40,53 @@ request. The token should be passed in request's `Authorization` header.
 Authorization: Bearer <token>
 ```
 
-:speaking_head: Movie service code is located under `./movie` directory
-
 ### 2) Authorization service
 To authorize users please use our simple auth service based on JWT tokens.
 
 :speaking_head: Auth service code is located under `./auth` directory
+
+#### <ins>*JWT Secret*</ins>
+
+To generate tokens in auth service you need to provide env variable`JWT_SECRET`. It should be a string value. You should use the same secret in
+the Movie API you're building to verify the JWT tokens.
+
+#### <ins>*Users*</ins>
+
+The auth service defines two user accounts that you should use
+
+1. `Basic` user
+
+```
+ username: 'basic-thomas'
+ password: 'sR-_pcoow-27-6PAwCD8'
+```
+
+1. `Premium` user
+
+```
+username: 'premium-jim'
+password: 'GBLtTyq3E_UNjFnpo9m6'
+```
+
+
+#### <ins>*Token payload*</ins>
+
+Decoding the auth token will give you access to basic information about the
+user, including its role.
+Decoding the auth token will give you access to basic information about the
+user, including its role.
+
+```
+{
+  "userId": 123,
+  "name": "Basic Thomas",
+  "role": "basic",
+  "iat": 1606221838,
+  "exp": 1606223638,
+  "iss": "https://www.netguru.com/",
+  "sub": "123"
+}
+```
 
 ## Features
 
@@ -61,55 +106,62 @@ You need to have `docker` and `docker-compose` installed on your computer to run
 
 1. Clone this repository
 2. In the root dir
-   - Create a **`.env`** file, 
+   - Create a **`.env`** file. Enviornmental variables for both auth service and movie service is placed in this file
    - Copy **`.env.sample`** content and paste it in the **`.env`**
    - Override **`OMDB_API_KEY`** in **`.env`** with your OMDb API Key
-   - (Optional) Default **`APP_PORT`** is **`3000`**. You can override the default value of **`APP_PORT`** by setting the in **`.env`**
-   - (Optional) Default **`MONGODB_USER`** is **`root`**.You can override the default value of **`MONGODB_USER`** by setting the in **`.env`**
-   - (Optional) Default **`MONGODB_PASSWORD`** is **`123456`**. You can override the default value of **`MONGODB_PASSWORD`** by setting the in **`.env`**
-   - (Optional) Default **`MONGODB_DATABASE`** is **`movies`**. You can override the default value of **`MONGODB_DATABASE`** by setting the in **`.env`**
-   - (Optional) Default **`MONGODB_DATABASE_TEST`** is **`movies_test`**. You can override the default value of **`MONGODB_DATABASE_TEST`** by setting the in **`.env`**
-   - (Optional) Default **`MONGODB_LOCAL_PORT`** is **`7017`**. You can override the default value of **`MONGODB_LOCAL_PORT`** by setting the in **`.env`**
-   - (Optional) Default **`NODE_LOCAL_PORT`** is **`4000`**. You can override the default value of **`NODE_LOCAL_PORT`** by setting the in **`.env`**
-   - (Optional) Default **`NODE_DOCKER_PORT`** is **`4001`**. You can override the default value by setting the `NODE_DOCKER_PORT` in **`.env`**
-3. Run from root dir
 
-### Configure JWT Verification Key
+| Service | ENV VARIABLE          | DEFAULT                 | Can I override the default value? |
+|---------|-----------------------|-------------------------|-----------------------------------|
+| auth    | JWT_SECRET            | secret                  | OPTIONAL                          |
+|         | APP_PORT              | 3000                    | OPTIONAL                          |
+| movie   | OMDB_API_URL          | https://www.omdbapi.com | OPTIONAL                          |
+|         | OMDB_API_KEY          | 123456                  | **REQUIRED**                      |
+|         | MONGODB_USER          | root                    | OPTIONAL                          |
+|         | MONGODB_PASSWORD      | 123456                  | OPTIONAL                          |
+|         | MONGODB_DATABASE      | movies                  | OPTIONAL                          |
+|         | MONGODB_DATABASE_TEST | movies_test             | OPTIONAL                          |
+|         | MONGODB_LOCAL_PORT    | 7017                    | OPTIONAL                          |
+|         | MONGODB_DOCKER_PORT   | 27017                   | **DO NOT CHANGE**                 |
+|         | NODE_LOCAL_PORT       | 4000                    | OPTIONAL                          |
+|         | NODE_DOCKER_PORT_TEST | 4002                    | OPTIONAL                          |
+|         | NODE_DOCKER_PORT      | 4001                    | OPTIONAL                          |
+  
+3. Run from root dir
 
 ### Run Local
 
-First Build and run your app with Compose in detached mode:
-```bash
-$ docker-compose up -d
+```
+# Build
+docker-compose up -d
+
+# Check state of of all the containers
+docker-compose ps
 ```
 
-When ready, see the status of all the containers:
-```bash
-$ docker-compose ps
+ *We assume that the movie service is running of the default port `4000` and auth service is running of the default port `3000`*
+
+- Enter http://localhost:3000/api-docs in a browser to see the auth application running. 
+- Enter http://localhost:4000/api-docs in a browser to see the movie application running.
+
 ```
+# (Optional) If state is not `Up`, inspect the logs to find out what errors are occurring 
+docker-compose logs --follow
 
-:point_right: Optional
+# (Optional) Fix the issue, rebuild and restart the containers
+docker-compose up -d --build
 
-When not ready, inspect the logs to find out what errors are occurring:
-```bash
-$ docker-compose logs --follow
-```
-
-When you make any change to the codebase, rebuild and restart the containers:
-```bash
-$ docker-compose up -d --build
-```
-
-To stop and remove containers, networks, images, and volumes:
-```bash
-$ docker-compose down
+# In the end, stop and remove containers, networks, images, and volumes
+docker-compose down
 ```
 
 ## Testing
 
-To run integration test:
-```bash
-$ docker-compose run movie npm run test
+```
+# run integration test
+docker-compose run movie npm run test
+
+# run integration test in watchAll mode. This will watch files for changes and rerun all tests when something changes. Useful for TDD
+docker-compose run movie npm run dev-test
 ```
 
 ## API
@@ -117,5 +169,96 @@ $ docker-compose run movie npm run test
 - Enter http://localhost:3000/api-docs in a browser to see the Authentication Swagger API.
 - Enter http://localhost:4000/api-docs in a browser to see the Movies Swagger API.
 
-## Screenshots
+#### Example request `POST /auth`
+
+To authorize user call the auth service using for example `curl`. We assume
+that the auth service is running of the default port `3000`.
+
+Request
+
+```
+curl --location --request POST '0.0.0.0:3000/auth' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "username": "basic-thomas",
+    "password": "sR-_pcoow-27-6PAwCD8"
+}'
+```
+
+Response
+
+```
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMywibmFtZSI6IkJhc2ljIFRob21hcyIsInJvbGUiOiJiYXNpYyIsImlhdCI6MTYwNjIyMTgzOCwiZXhwIjoxNjA2MjIzNjM4LCJpc3MiOiJodHRwczovL3d3dy5uZXRndXJ1LmNvbS8iLCJzdWIiOiIxMjMifQ.KjZ3zZM1lZa1SB8U-W65oQApSiC70ePdkQ7LbAhpUQg"
+}
+```
+
+#### Example request `POST /movies`
+
+To post a movie call the movie service using for example `curl`. We assume
+that the movie service is running of the default port `4000`.
+
+Request
+
+```
+curl -X 'POST' \
+  'http://localhost:4000/api/movies' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMywibmFtZSI6IkJhc2ljIFRob21hcyIsInJvbGUiOiJiYXNpYyIsImlhdCI6MTYwNjIyMTgzOCwiZXhwIjoxNjA2MjIzNjM4LCJpc3MiOiJodHRwczovL3d3dy5uZXRndXJ1LmNvbS8iLCJzdWIiOiIxMjMifQ.KjZ3zZM1lZa1SB8U-W65oQApSiC70ePdkQ7LbAhpUQg' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "title": "Spiderman"
+}'
+```
+
+Response
+
+```
+{
+  "userId": 434,
+  "title": "Spiderman",
+  "genre": "Short",
+  "released": "N/A",
+  "director": "Christian Davi",
+  "_id": "62355f33f047478b70cf0ef2",
+  "createdAt": "2022-03-19T04:42:27.212Z",
+  "updatedAt": "2022-03-19T04:42:27.212Z",
+  "__v": 0
+}
+```
+
+##### Example request `GET /movies`
+
+To get movies call the movie service using for example `curl`. We assume
+that the movie service is running of the default port `4000`.
+
+Request
+
+```
+curl -X 'GET' \
+  'http://localhost:4000/api/movies' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMywibmFtZSI6IkJhc2ljIFRob21hcyIsInJvbGUiOiJiYXNpYyIsImlhdCI6MTYwNjIyMTgzOCwiZXhwIjoxNjA2MjIzNjM4LCJpc3MiOiJodHRwczovL3d3dy5uZXRndXJ1LmNvbS8iLCJzdWIiOiIxMjMifQ.KjZ3zZM1lZa1SB8U-W65oQApSiC70ePdkQ7LbAhpUQg'
+```
+
+Response
+
+```
+[
+  {
+    "_id": "6234b7a86ec38bee38fcc03d",
+    "userId": 434,
+    "title": "Spiderman",
+    "genre": "Short",
+    "released": "N/A",
+    "director": "Christian Davi",
+    "_id": "62355f33f047478b70cf0ef2",
+    "createdAt": "2022-03-19T04:42:27.212Z",
+    "updatedAt": "2022-03-19T04:42:27.212Z",
+    "__v": 0
+  }
+]
+```
+
+## CI/CD Pipeline
 TODO: 

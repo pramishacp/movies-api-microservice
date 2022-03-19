@@ -6,7 +6,13 @@ const app = express();
 require('./startup/routes')(app);
 require('./startup/db')();
 
-const PORT = process.env.NODE_DOCKER_PORT || 4000;
+const {
+    NODE_DOCKER_PORT,
+    NODE_DOCKER_PORT_TEST,
+    NODE_ENV
+} = process.env;
+
+const PORT = (NODE_ENV === 'test') ? NODE_DOCKER_PORT_TEST : NODE_DOCKER_PORT;
 
 /* eslint-disable no-console */
 const server = app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
