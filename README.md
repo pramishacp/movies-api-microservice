@@ -7,7 +7,7 @@
 - [Requirements](#requirements)
 - [Quick Start](#quick-start)
 - [Testing](#testing)
-- [API](#requirements)
+- [API](#api)
 - [CI/CD Pipeline](#cicd-pipeline)
 
 ## Introduction
