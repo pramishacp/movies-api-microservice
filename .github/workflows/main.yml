@@ -40,6 +40,7 @@ jobs:
          echo MONGODB_DOCKER_PORT=${{ secrets.MONGODB_DOCKER_PORT }} >> .env
          echo NODE_LOCAL_PORT=${{ secrets.NODE_LOCAL_PORT }} >> .env
          echo NODE_DOCKER_PORT=${{ secrets.NODE_DOCKER_PORT }} >> .env
+         echo NODE_DOCKER_PORT_TEST=${{ secrets.NODE_DOCKER_PORT_TEST }} >> .env
 
       # Runs a single command using the runners shell
       - name: Build the stack
